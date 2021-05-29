@@ -10,12 +10,12 @@ fn main() {
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new().build(&event_loop).unwrap();
     let mut renderer = trips::Renderer::new(&window);
-    let mesh_obj = renderer.load_mesh("res/Box.gltf");
+    
+    let mut mesh_obj = renderer.load_mesh("res/Box.gltf");
+    let mut monkey = renderer.load_mesh("res/monkey.gltf");
 
-    /*
-        mesh_obj.material.render_properties.albedo = glam::Vec4(1.0,0.0,0.0,1.0);
-    */
-
+    mesh_obj.material.render_properties.albedo = glam::Vec4::new(1.0,0.0,1.0,1.0);
+    monkey.material.render_properties.albedo = glam::Vec4::new(1.0,1.0,1.0,1.0);
     event_loop.run(move |event, _, control_flow| {
         match event {
             Event::WindowEvent {
@@ -35,9 +35,10 @@ fn main() {
             }
             Event::RedrawRequested(_) => {
                 let mut scene = trips::Scene {
-                    objects: Vec::new()
+                    meshes: Vec::new()
                 };
-                scene.objects.push(&mesh_obj);
+                scene.meshes.push(&mesh_obj);
+                scene.meshes.push(&monkey);
                 renderer.update();
                 match renderer.draw(&scene) {
                     Ok(_) => {}
